@@ -22,12 +22,13 @@ namespace AutomateTenantBackups
     class AutomateBackups
     {
         #region variables
-        public static readonly string aBiPBackupRootFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),"Documents","aBiPBackupTool");
-        private static readonly string aBiPArchives = Path.Combine(aBiPBackupRootFolder, "aBiPArchives");
+        public static readonly string AWSBackupRootFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),"Documents", "AWSBackupRootFolder");
+        private static readonly string AWSArchivesFile = "AWSArchives";
+        private static readonly string AWSArchivesFolder = Path.Combine(AWSBackupRootFolder, AWSArchivesFile);
         private static readonly string awsCLITool = Path.Combine(Environment.CurrentDirectory, "Files", "S3Downloader.bat");
-        private static readonly string archiveToUpload = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), aBiPBackupRootFolder,"aBiPArchives_Archive.zip");
+        private static readonly string archiveToUpload = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), AWSBackupRootFolder, $"{AWSArchivesFile}.zip");
         private static readonly string appLogoPath = Path.Combine(Environment.CurrentDirectory, "Files", "logo.png");
-        public static readonly string usersAppLogoPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), aBiPBackupRootFolder, "logo.png");
+        public static readonly string usersAppLogoPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), AWSBackupRootFolder, "logo.png");
         private static bool doesDataExist = false;
         private static ConfigHelper configHelper;
         #endregion
@@ -74,7 +75,7 @@ namespace AutomateTenantBackups
 
         private static int CheckFilesInDirectory()
         {
-            int fCount = Directory.GetFiles(aBiPArchives, "*", SearchOption.AllDirectories).Length;
+            int fCount = Directory.GetFiles(AWSArchivesFolder, "*", SearchOption.AllDirectories).Length;
             return fCount;
         }
 
@@ -84,7 +85,7 @@ namespace AutomateTenantBackups
                 File.Delete(archiveToUpload);
 
             if (doesDataExist)
-                Directory.Delete(aBiPArchives, recursive: true);
+                Directory.Delete(AWSArchivesFolder, recursive: true);
         }
 
         private static void CheckIfFoldersExist()
@@ -92,11 +93,11 @@ namespace AutomateTenantBackups
             CleanUpFiles();
             CopyAppLogo();
 
-            if (!Directory.Exists(aBiPBackupRootFolder))
-                Directory.CreateDirectory(aBiPBackupRootFolder);
+            if (!Directory.Exists(AWSBackupRootFolder))
+                Directory.CreateDirectory(AWSBackupRootFolder);
             
-            if (!Directory.Exists(aBiPArchives))
-                Directory.CreateDirectory(aBiPArchives);
+            if (!Directory.Exists(AWSArchivesFolder))
+                Directory.CreateDirectory(AWSArchivesFolder);
         }
 
         //Start the backup transfer to glacier // this method uses the high level api, can be used for small file sizes
@@ -154,7 +155,7 @@ namespace AutomateTenantBackups
                 if (doesDataExist)
                 {
                     Console.WriteLine("\n\nCompressing files...");
-                    ZipFile.CreateFromDirectory(aBiPArchives, $"{aBiPArchives}_Archive.zip");
+                    ZipFile.CreateFromDirectory(AWSArchivesFolder, $"{AWSArchivesFile}.zip");
                 }
             });
         }

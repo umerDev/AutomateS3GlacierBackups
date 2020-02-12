@@ -22,7 +22,7 @@ namespace AutomateTenantBackups
         public string AWSVaultName { get; set; }
         public string AWSRegion { get; set; }
 
-        private string configPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), AutomateBackups.aBiPBackupRootFolder, "config.json");
+        private string configPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), AutomateBackups.AWSBackupRootFolder, "config.json");
         public ConfigHelper()
         {
             if (!File.Exists(configPath))

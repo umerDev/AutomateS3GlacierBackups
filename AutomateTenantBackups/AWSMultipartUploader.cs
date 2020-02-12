@@ -33,6 +33,8 @@ namespace AutomateTenantBackups
                     string uploadId = await InitiateMultipartUploadAsync(client);
                     partChecksumList = UploadParts(uploadId, client);
                     string archiveId = await CompleteMPUAsync(uploadId, client, partChecksumList);
+                    Console.WriteLine("Total parts: {0}", partChecksumList.Count);
+                    Console.WriteLine("Upload ID: {0}", uploadId);
                     Console.WriteLine("Archive ID: {0}", archiveId);
                 }
                 Console.WriteLine("Operations successful.");

@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29411.108
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutomateTenantBackups", "AutomateTenantBackups\AutomateTenantBackups.csproj", "{638798FA-2ECE-44A5-B3F5-BDB5ED46D6D0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutomateTenantBackups", "AutomateTenantBackups\AutomateTenantBackups.csproj", "{638798FA-2ECE-44A5-B3F5-BDB5ED46D6D0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Glacier Setup", "Glacier Setup\Glacier Setup.csproj", "{CACFC784-4B94-4C1C-BA6F-BC918DC632A3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{638798FA-2ECE-44A5-B3F5-BDB5ED46D6D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{638798FA-2ECE-44A5-B3F5-BDB5ED46D6D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{638798FA-2ECE-44A5-B3F5-BDB5ED46D6D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CACFC784-4B94-4C1C-BA6F-BC918DC632A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CACFC784-4B94-4C1C-BA6F-BC918DC632A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CACFC784-4B94-4C1C-BA6F-BC918DC632A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CACFC784-4B94-4C1C-BA6F-BC918DC632A3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
