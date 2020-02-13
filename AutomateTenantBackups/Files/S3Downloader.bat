@@ -16,6 +16,15 @@ echo.
 
 color a
 
+::Backup PoC buckets
+echo You are going to copy bucket ar-poc-tenants
+aws s3 sync s3://ar-poc-tenants %UserProfile%\Documents\AWSBackupRootFolder\AWSArchives\Today
+echo Finished download
+setlocal enableextensions
+set todaysDate=%DATE:/=_%
+Rename %UserProfile%\Documents\AWSBackupRootFolder\AWSArchives\Today ar-poc-tenants_"%todaysDate%"
+echo Renamed Folder
+
 ::Backup dev buckets
 echo You are going to copy bucket amplify-ar-development
 aws s3 sync s3://amplify-ar-development %UserProfile%\Documents\AWSBackupRootFolder\AWSArchives\Today
@@ -32,13 +41,4 @@ echo Finished download
 setlocal enableextensions
 set todaysDate=%DATE:/=_%
 Rename %UserProfile%\Documents\AWSBackupRootFolder\AWSArchives\Today ar-demo-tenants_"%todaysDate%"
-echo Renamed Folder
-
-::Backup PoC buckets
-echo You are going to copy bucket ar-poc-tenants
-aws s3 sync s3://ar-poc-tenants %UserProfile%\Documents\AWSBackupRootFolder\AWSArchives\Today
-echo Finished download
-setlocal enableextensions
-set todaysDate=%DATE:/=_%
-Rename %UserProfile%\Documents\AWSBackupRootFolder\AWSArchives\Today ar-poc-tenants_"%todaysDate%"
 echo Renamed Folder
