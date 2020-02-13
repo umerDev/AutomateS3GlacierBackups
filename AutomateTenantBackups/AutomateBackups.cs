@@ -22,13 +22,6 @@ namespace AutomateTenantBackups
     class AutomateBackups
     {
         #region variables
-        public static readonly string AWSBackupRootFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),"Documents", "AWSBackupRootFolder");
-        private static readonly string AWSArchivesFile = "AWSArchives";
-        private static readonly string AWSArchivesFolder = Path.Combine(AWSBackupRootFolder, AWSArchivesFile);
-        private static readonly string awsCLITool = Path.Combine(Environment.CurrentDirectory, "Files", "S3Downloader.bat");
-        private static readonly string archiveToUpload = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), AWSBackupRootFolder, $"{AWSArchivesFile}.zip");
-        private static readonly string appLogoPath = Path.Combine(Environment.CurrentDirectory, "Files", "logo.png");
-        public static readonly string usersAppLogoPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), AWSBackupRootFolder, "logo.png");
         private static bool doesDataExist = false;
         private static ConfigHelper configHelper;
         #endregion
@@ -45,9 +38,9 @@ namespace AutomateTenantBackups
                 IsBackupNeeded();
 
                 await Task.Run(() => ZipFiles());
-
-                AWSMultipartUploader multipartUploader = new AWSMultipartUploader(configHelper.AWSVaultName, archiveToUpload, ConfigHelper.ReturnEndpoint(configHelper.AWSRegion));
-                await multipartUploader.StartMultipartUploadAsync();
+                await Task.Run(() => StartBackup());
+                //AWSMultipartUploader multipartUploader = new AWSMultipartUploader(configHelper.AWSVaultName, Paths.archiveToUpload, ConfigHelper.ReturnEndpoint(configHelper.AWSRegion));
+                //await multipartUploader.StartMultipartUploadAsync();
                 
                 CleanUpFiles();
                 Notifications.Notify();
@@ -58,10 +51,12 @@ namespace AutomateTenantBackups
             }
         }
 
-        private static void CopyAppLogo()
+        private static void CopyFilesToUsersDirectory()
         {
-            if (!File.Exists(usersAppLogoPath))
-                File.Copy(appLogoPath, usersAppLogoPath, true);
+            if (!File.Exists(Paths.usersAppLogoPath))
+                File.Copy(Paths.appLogoPath, Paths.usersAppLogoPath, true);
+            if (!File.Exists(Paths.usersS3DownloaderPath))
+                File.Copy(Paths.appS3DownloaderPath, Paths.usersS3DownloaderPath, true);
         }
         private static void IsBackupNeeded()
         {
@@ -75,29 +70,29 @@ namespace AutomateTenantBackups
 
         private static int CheckFilesInDirectory()
         {
-            int fCount = Directory.GetFiles(AWSArchivesFolder, "*", SearchOption.AllDirectories).Length;
+            int fCount = Directory.GetFiles(Paths.AWSArchivesFolder, "*", SearchOption.AllDirectories).Length;
             return fCount;
         }
 
         private static void CleanUpFiles()
         {
-            if (File.Exists(archiveToUpload))
-                File.Delete(archiveToUpload);
+            if (File.Exists(Paths.archiveToUpload))
+                File.Delete(Paths.archiveToUpload);
 
             if (doesDataExist)
-                Directory.Delete(AWSArchivesFolder, recursive: true);
+                Directory.Delete(Paths.AWSArchivesFolder, recursive: true);
         }
 
         private static void CheckIfFoldersExist()
         {
             CleanUpFiles();
-            CopyAppLogo();
+            CopyFilesToUsersDirectory();
 
-            if (!Directory.Exists(AWSBackupRootFolder))
-                Directory.CreateDirectory(AWSBackupRootFolder);
+            if (!Directory.Exists(Paths.AWSBackupRootFolder))
+                Directory.CreateDirectory(Paths.AWSBackupRootFolder);
             
-            if (!Directory.Exists(AWSArchivesFolder))
-                Directory.CreateDirectory(AWSArchivesFolder);
+            if (!Directory.Exists(Paths.AWSArchivesFolder))
+                Directory.CreateDirectory(Paths.AWSArchivesFolder);
         }
 
         //Start the backup transfer to glacier // this method uses the high level api, can be used for small file sizes
@@ -107,12 +102,12 @@ namespace AutomateTenantBackups
             {
                 Console.WriteLine("\n\nBackup to vault starting... ");
                 ArchiveTransferManager manager = new ArchiveTransferManager(ConfigHelper.ReturnEndpoint(configHelper.AWSRegion));
-                var archiveId =  await manager.UploadAsync(configHelper.AWSVaultName, "TenantBackup", archiveToUpload);
+                var archiveId =  await manager.UploadAsync(configHelper.AWSVaultName, "TenantBackup", Paths.archiveToUpload);
                 Console.WriteLine("Archive ID: {0}", archiveId.ArchiveId);
                 Console.WriteLine($"checksum {archiveId.Checksum}");
-                Console.WriteLine("To continue, press Enter");
-                Console.ReadKey();
+                Notifications.WriteLogFile(archiveId.ArchiveId, archiveId.Checksum);
                 Console.WriteLine("\n\nTransfer to S3 Glacier vault is complete.");
+                System.Threading.Thread.Sleep(5000);
                 return archiveId;
             }
             catch (AmazonGlacierException e) { Console.WriteLine(e.Message); }
@@ -132,7 +127,7 @@ namespace AutomateTenantBackups
                 await Task.Run(() =>
                 {
                     Process proc = new Process();
-                    proc.StartInfo.FileName = awsCLITool;
+                    proc.StartInfo.FileName = Paths.usersS3DownloaderPath;
                     proc.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
                     proc.Start();
                     proc.WaitForExit();
@@ -155,7 +150,7 @@ namespace AutomateTenantBackups
                 if (doesDataExist)
                 {
                     Console.WriteLine("\n\nCompressing files...");
-                    ZipFile.CreateFromDirectory(AWSArchivesFolder, $"{AWSArchivesFile}.zip");
+                    ZipFile.CreateFromDirectory(Paths.AWSArchivesFolder, $"{Paths.AWSArchivesFolder}.zip");
                 }
             });
         }

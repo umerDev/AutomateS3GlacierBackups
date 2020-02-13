@@ -48,7 +48,6 @@ namespace AutomateTenantBackups
         {
             InitiateMultipartUploadRequest initiateMPUrequest = new InitiateMultipartUploadRequest()
             {
-
                 VaultName = VaultName,
                 PartSize = partSize,
                 ArchiveDescription = $"aBiPBackup_{DateTime.Now}."

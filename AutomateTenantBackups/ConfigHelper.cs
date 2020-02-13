@@ -21,11 +21,11 @@ namespace AutomateTenantBackups
     {
         public string AWSVaultName { get; set; }
         public string AWSRegion { get; set; }
-
-        private string configPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), AutomateBackups.AWSBackupRootFolder, "config.json");
         public ConfigHelper()
         {
-            if (!File.Exists(configPath))
+            Directory.CreateDirectory(Paths.ConfigurationFolder);
+            CopyS3Downloader();
+            if (!File.Exists(Paths.configPath))
             {
                 Config config = new Config
                 (
@@ -35,7 +35,7 @@ namespace AutomateTenantBackups
                 
                 string result = JsonConvert.SerializeObject(config);
 
-                using (var tw = new StreamWriter(configPath, true))
+                using (var tw = new StreamWriter(Paths.configPath, true))
                 {
                     tw.WriteLine(result.ToString());
                     tw.Close();
@@ -47,6 +47,12 @@ namespace AutomateTenantBackups
             }
         }
 
+        private static void CopyS3Downloader()
+        {
+            if (!File.Exists(Paths.usersS3DownloaderPath))
+                File.Copy(Paths.appS3DownloaderPath, Paths.usersS3DownloaderPath, true);
+        }
+
         public static RegionEndpoint ReturnEndpoint(string endpoint)
         {
            return  RegionEndpoint.GetBySystemName(endpoint);
@@ -54,7 +60,7 @@ namespace AutomateTenantBackups
 
         public void ReadConfigFile()
         {
-            using (StreamReader r = new StreamReader(configPath))
+            using (StreamReader r = new StreamReader(Paths.configPath))
             {
                 string json = r.ReadToEnd();
                 var config = JsonConvert.DeserializeObject<Config>(json);

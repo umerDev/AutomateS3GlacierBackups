@@ -22,6 +22,14 @@ namespace AutomateTenantBackups
             process.Start();
             process.WaitForExit();
         }
+
+        public static void WriteLogFile(string archiveID, string checksum)
+        {
+            using (StreamWriter file = new StreamWriter(Paths.LogFile, true))
+            {
+                file.WriteLine($"Archive ID: {archiveID} \nChecksum: {checksum} \n Date:{DateTime.Now}");
+            }
+        }
     }
 }
 

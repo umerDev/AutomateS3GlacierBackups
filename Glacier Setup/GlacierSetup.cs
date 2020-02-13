@@ -42,7 +42,8 @@ namespace Glacier_Setup
                 Console.WriteLine("2) Setup AWS Config for Vault");
                 Console.WriteLine("3) Set AWS credentials");
                 Console.WriteLine("4) Install BurntToast");
-                Console.WriteLine("5) Exit");
+                Console.WriteLine("5) Enter Buckets to Download");
+                Console.WriteLine("6) Exit");
                 Console.Write("\r\nSelect an option: ");
 
                 switch (Console.ReadLine())
@@ -60,6 +61,9 @@ namespace Glacier_Setup
                         installHelper.InstallBurntToast();
                         return true;
                     case "5":
+                        installHelper.BucketsToBackup();
+                        return true;
+                    case "6":
                         return false;
                     default:
                         return true;
