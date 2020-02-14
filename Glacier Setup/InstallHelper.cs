@@ -8,7 +8,7 @@ namespace Glacier_Setup
 {
     class InstallHelper
     {
-        private static readonly string AWSBackupRootFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Documents", "AWSBackupRootFolder");
+        public static readonly string AWSBackupRootFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Documents", "AWSBackupRootFolder");
         private static readonly string configurationFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), AWSBackupRootFolder, "Configuration");
         private static readonly string usersS3DownloaderPath = Path.Combine(configurationFolder, "S3Downloader.bat");
         private static string configPath = Path.Combine(configurationFolder, "config.json");
