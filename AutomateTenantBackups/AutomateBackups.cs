@@ -24,13 +24,16 @@ namespace AutomateTenantBackups
         #region variables
         private static bool doesDataExist = false;
         private static ConfigHelper configHelper;
+        private static DeleteVault deleteVault;
         #endregion
 
         static async Task Main(string[] args)
         {
             try
             {
+                deleteVault = new DeleteVault();
                 configHelper = new ConfigHelper();
+                
                 CheckIfFoldersExist();
 
                 await Task.Run(() => DownloadS3Bucket());
@@ -43,6 +46,8 @@ namespace AutomateTenantBackups
                 //await multipartUploader.StartMultipartUploadAsync();
                 
                 CleanUpFiles();
+
+                await Task.Run(() => deleteVault.DeleteOldestArchiveAsync());
                 Notifications.Notify();
             }
             catch(Exception ex)
