@@ -8,7 +8,7 @@ namespace AutomateTenantBackups
     class Paths
     {
         #region User Variables
-        public static readonly string LogFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Documents", "AWSBackupRootFolder","Configuration","LogFile.txt");
+        public static readonly string LogFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Documents", "AWSBackupRootFolder","Configuration","LogFile.json");
         //Users document - C:\Users\RAJAU\Documents\AWSBackupRootFolder
         public static readonly string AWSBackupRootFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Documents", "AWSBackupRootFolder");
         //Users document - C:\Users\RAJAU\Documents\AWSBackupRootFolder\Configuration
