@@ -62,12 +62,12 @@ namespace AutomateTenantBackups
                     var manager = new ArchiveTransferManager(region);
                     await manager.DeleteArchiveAsync(vaultName, archiveToDelete);
                     DeleteArchiveFromConfig();
+                    Console.WriteLine($"You successfully deleted archive {archiveToDelete} from Vault {vaultName}");
                 }
             }
             catch (AmazonGlacierException e) { Console.WriteLine(e.Message); }
             catch (AmazonServiceException e) { Console.WriteLine(e.Message); }
             catch (Exception e) { Console.WriteLine(e.Message); }
-            Console.WriteLine($"You successfully deleted archive {archiveToDelete} from Vault {vaultName}");
             Thread.Sleep(500);
         }
     }
