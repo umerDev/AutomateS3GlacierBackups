@@ -42,8 +42,6 @@ namespace AutomateTenantBackups
 
                 await Task.Run(() => ZipFiles());
                 await Task.Run(() => StartBackup());
-                //AWSMultipartUploader multipartUploader = new AWSMultipartUploader(configHelper.AWSVaultName, Paths.archiveToUpload, ConfigHelper.ReturnEndpoint(configHelper.AWSRegion));
-                //await multipartUploader.StartMultipartUploadAsync();
                 
                 CleanUpFiles();
 
@@ -128,7 +126,7 @@ namespace AutomateTenantBackups
         {
             try
             {
-                Console.WriteLine("\nStarting S3 Download process...\n\n ");
+                Console.WriteLine("\nStarted S3 Download process, this may take a while...\n\n ");
                 await Task.Run(() =>
                 {
                     Process proc = new Process();
